@@ -37,10 +37,11 @@ def subir_archivo(ruta_archivo, id_folder):
     archivo.Upload()
 
 # Descargar video de YouTube
-def download_video(link_video):
+def download_video(link_video, numero):
     ydl_opts = {
         'format': 'best',
-        'outtmpl': './YT/%(title)s.%(ext)s',
+        'outtmpl': f'/home/ander/Vídeos/Python/Fundamentos/{numero}.- %(title)s.%(ext)s',
+        'noplaylist': True  # Permitir la descarga de toda la playlist
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         result = ydl.extract_info(link_video, download=True)
@@ -52,11 +53,28 @@ def main():
         df = pd.read_excel(file_path, sheet_name=sheet_name)
         videos = df[column_name].values
 
+        index = 1
         for link_video in videos:
-            ruta_archivo = download_video(link_video)
-            print(f"Video {link_video} descargado exitosamente.")
-            subir_archivo(ruta_archivo, id_folder)
-            print(f"Video {ruta_archivo} subido exitosamente a Google Drive.")
+            # Establecer opciones para descargar toda la playlist si el link es una playlist
+            ydl_opts = {
+                'format': 'best',
+                'outtmpl': f'/home/ander/Vídeos/Python/Fundamentos/{index}.- %(title)s.%(ext)s',
+                'noplaylist': False  # Permitir la descarga de toda la playlist
+            }
+            
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                # Verificar si es una playlist y extraer los videos
+                info_dict = ydl.extract_info(link_video, download=False)
+                
+                if 'entries' in info_dict:  # Es una playlist
+                    for entry in info_dict['entries']:
+                        ruta_archivo = download_video(entry['webpage_url'], index)
+                        index += 1
+                        print(f"Video {entry['webpage_url']} descargado exitosamente como {ruta_archivo}.")
+                else:  # Es un video único
+                    ruta_archivo = download_video(link_video, index)
+                    index += 1
+                    print(f"Video {link_video} descargado exitosamente como {ruta_archivo}.")
     except Exception as e:
         print(f"Error al procesar el video {link_video}: {e}")
 
