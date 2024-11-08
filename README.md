@@ -2,6 +2,38 @@
 
 Este proyecto automatiza la descarga de videos de YouTube y su posterior subida a Google Drive. Utiliza `yt-dlp` para la descarga de videos y `pydrive2` para la autenticación y subida de archivos a Google Drive. El proyecto está diseñado para trabajar con una lista de enlaces de YouTube almacenados en un archivo Excel.
 
+## Instalación del Proyecto
+
+### 1. Crear un Entorno Virtual
+
+Un entorno virtual es altamente recomendado para aislar las dependencias de este proyecto de otros proyectos que puedas tener.
+
+#### Windows
+
+```sh
+# Navega al directorio del proyecto
+cd tu_proyecto
+
+# Crea el entorno virtual (reemplaza "mi_entorno" por el nombre que desees)
+python -m venv mi_entorno
+
+# Activa el entorno virtual
+mi_entorno\Scripts\activate
+```
+
+#### Linux/macOS:
+
+```sh
+# Navega al directorio del proyecto
+cd tu_proyecto
+
+# Crea el entorno virtual (reemplaza "mi_entorno" por el nombre que desees)
+python -m venv mi_entorno
+
+# Activa el entorno virtual
+source mi_entorno/bin/activate
+```
+
 ## Estructura del Proyecto
 
 La estructura de directorios y archivos del proyecto es la siguiente:
@@ -54,10 +86,13 @@ pip install -r requirements.txt
 ```
 
 ## Configuración
+
 ### `settings.yaml`
+
 Este archivo contiene la configuración para pydrive2, incluyendo las credenciales de cliente de Google y los detalles de autenticación.
 
 Ejemplo de configuración (settings.yaml):
+
 ```yaml
 client_config_backend: settings
 client_config:
@@ -71,17 +106,21 @@ save_credentials_file: credentials_module.json
 get_refresh_token: True
 
 oauth_scope:
- - https://www.googleapis.com/auth/drive
+  - https://www.googleapis.com/auth/drive
 ```
 
 ## Uso
+
 1. Coloca los enlaces de los videos de YouTube en el archivo enlaces.xlsx dentro de la carpeta enlaces_videos.
 2. Ejecuta el script principal:
+
 ```sh
 python downloas.py
 ```
+
 El script descargará los videos y los subirá automáticamente a la carpeta especificada en Google Drive.
 
 ## Notas
+
 - Asegúrate de que las credenciales de Google Drive estén configuradas correctamente antes de ejecutar el script.
 - Los videos descargados se almacenan temporalmente en la carpeta YT.
